@@ -16,7 +16,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::controller(SecretController::class)->group(function () {
         Route::get('dashboard/secrets', 'index')->name('secret.index');
         Route::post('dashboard/secrets', 'store')->name('secret.store');
-        Route::get('share', 'create')->name('secret.create');
+        Route::get('secrets/share', 'create')->name('secret.create');
     });
 });
 

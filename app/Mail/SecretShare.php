@@ -13,14 +13,14 @@ class SecretShare extends Mailable
 {
     use Queueable, SerializesModels;
 
+    public $data;
+
     /**
      * Create a new message instance.
      */
-    public function __construct(public string $recipient, public string $link, public string $key)
+    public function __construct($data)
     {
-        $this->recipient = $recipient;
-        $this->link = $link;
-        $this->key = $key;
+        $this->data = $data;
     }
 
     /**

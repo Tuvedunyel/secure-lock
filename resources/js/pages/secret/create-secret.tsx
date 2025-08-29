@@ -37,7 +37,7 @@ export default function CreateSecret() {
                     <form className="container m-auto" onSubmit={submit}>
                         <div className="space-y-6">
                             <div className="grid gap-2">
-                                <Label className="text-white" htmlFor="recipient">
+                                <Label className="text-[#1b1b18] dark:text-[#EDEDEC]" htmlFor="recipient">
                                     Title
                                 </Label>
                                 <Input
@@ -48,13 +48,14 @@ export default function CreateSecret() {
                                     value={data.title}
                                     autoFocus
                                     onChange={(e) => setData('title', e.target.value)}
+                                    className="text-[#1b1b18] dark:text-[#EDEDEC]"
                                 />
 
                                 <InputError message={errors.title} />
                             </div>
 
                             <div className="grid gap-2">
-                                <Label className="text-white" htmlFor="recipient">
+                                <Label className="text-[#1b1b18] dark:text-[#EDEDEC]" htmlFor="recipient">
                                     Who will receive this secret ?
                                 </Label>
                                 <Input
@@ -65,13 +66,14 @@ export default function CreateSecret() {
                                     value={data.recipient}
                                     autoFocus
                                     onChange={(e) => setData('recipient', e.target.value)}
+                                    className="text-[#1b1b18] dark:text-[#EDEDEC]"
                                 />
 
                                 <InputError message={errors.recipient} />
                             </div>
 
                             <div className="grid gap-2">
-                                <Label className="text-white" htmlFor="secret">
+                                <Label className="text-[#1b1b18] dark:text-[#EDEDEC]" htmlFor="secret">
                                     Secret
                                 </Label>
                                 <Textarea
@@ -80,6 +82,7 @@ export default function CreateSecret() {
                                     placeholder="Your Secret"
                                     value={data.secret}
                                     onChange={(e) => setData('secret', e.target.value)}
+                                    className="text-[#1b1b18] dark:text-[#EDEDEC]"
                                 />
 
                                 <InputError message={errors.secret} />

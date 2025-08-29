@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\SecretShare;
 use App\Models\Secret;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 use Inertia\Inertia;
 
 class SecretController extends Controller
@@ -30,7 +32,8 @@ class SecretController extends Controller
     {
         // Validate the request data
         $request->validate([
-            'recipient' => 'required|string|max:255',
+            'title' => 'required|string|max:255',
+            'recipient' => 'required|email|max:255',
             'secret' => 'required|string|max:1000',
         ]);
 
@@ -44,11 +47,26 @@ class SecretController extends Controller
 
         Secret::create([
             'user_id' => auth()->id(),
+            'title' => $request->title,
             'recipient' => $request->recipient,
             'secret' => openssl_encrypt($request->secret, $this->cipher, $key, 0, $iv),
             'status' => 'sent',
             'expires_at' => $expiresAt,
         ]);
+
+        $sending_secret = Secret::where('title', $request->title)
+            ->where('recipient', $request->recipient)
+            ->where('user_id', auth()->id())
+            ->where('expires_at', $expiresAt)
+            ->first();
+
+        $data = [
+            'recipient' => $request->recipient,
+            'title' => $request->title,
+            'link' => route('secret.show', ['secret' => $sending_secret->id, 'key' => $randomKey]),
+        ];
+
+        Mail::to($request->recipient)->send(new SecretShare($data));
 
         return redirect('/dashboard/secrets')->with('success', 'Secret created successfully!');
     }

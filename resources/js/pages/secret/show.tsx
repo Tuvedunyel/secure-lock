@@ -15,7 +15,7 @@ export default function Show({ title, secret }: { title: string; secret: string 
                 <Header />
                 <main>
                     <h1 className="text-[#1b1b18] dark:text-[#EDEDEC]">{title}</h1>
-                    <p>{secret}</p>
+                    <p className="text-[#1b1b18] dark:text-[#EDEDEC]">{secret}</p>
                 </main>
                 <Footer />
             </HomeLayout>
