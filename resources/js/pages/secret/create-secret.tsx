@@ -11,7 +11,8 @@ import { LoaderCircle } from 'lucide-react';
 import { FormEventHandler } from 'react';
 
 export default function CreateSecret() {
-    const { data, setData, post, processing, errors, reset } = useForm<Required<{ recipient: string; secret: string }>>({
+    const { data, setData, post, processing, errors, reset } = useForm<Required<{ title: string; recipient: string; secret: string }>>({
+        title: '',
         recipient: '',
         secret: '',
     });
@@ -20,7 +21,7 @@ export default function CreateSecret() {
         e.preventDefault();
 
         post(route('secret.store'), {
-            onFinish: () => reset('recipient', 'secret'),
+            onFinish: () => reset('title', 'recipient', 'secret'),
         });
     };
     return (
@@ -37,11 +38,28 @@ export default function CreateSecret() {
                         <div className="space-y-6">
                             <div className="grid gap-2">
                                 <Label className="text-white" htmlFor="recipient">
-                                    Name
+                                    Title
                                 </Label>
                                 <Input
                                     id="recipient"
                                     type="text"
+                                    name="recipient"
+                                    placeholder="The recipient of the secret"
+                                    value={data.title}
+                                    autoFocus
+                                    onChange={(e) => setData('title', e.target.value)}
+                                />
+
+                                <InputError message={errors.title} />
+                            </div>
+
+                            <div className="grid gap-2">
+                                <Label className="text-white" htmlFor="recipient">
+                                    Who will receive this secret ?
+                                </Label>
+                                <Input
+                                    id="recipient"
+                                    type="email"
                                     name="recipient"
                                     placeholder="The recipient of the secret"
                                     value={data.recipient}

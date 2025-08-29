@@ -3,7 +3,7 @@ import Header from '@/components/header';
 import HomeLayout from '@/layouts/home-layout';
 import { Head } from '@inertiajs/react';
 
-export default function Show({ secret }: { secret: string }) {
+export default function Show({ title, secret }: { title: string; secret: string }) {
     return (
         <>
             <Head title="Secret Lock - Accueil">
@@ -14,7 +14,8 @@ export default function Show({ secret }: { secret: string }) {
             <HomeLayout>
                 <Header />
                 <main>
-                    <h1 className="text-[#1b1b18] dark:text-[#EDEDEC]">{secret}</h1>
+                    <h1 className="text-[#1b1b18] dark:text-[#EDEDEC]">{title}</h1>
+                    <p>{secret}</p>
                 </main>
                 <Footer />
             </HomeLayout>

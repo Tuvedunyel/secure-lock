@@ -46,7 +46,6 @@ class SecretController extends Controller
             'user_id' => auth()->id(),
             'recipient' => $request->recipient,
             'secret' => openssl_encrypt($request->secret, $this->cipher, $key, 0, $iv),
-            'random_key' => $randomKey,
             'status' => 'sent',
             'expires_at' => $expiresAt,
         ]);
@@ -69,6 +68,7 @@ class SecretController extends Controller
         $decrypted_secret = openssl_decrypt($secret->secret, $this->cipher, $key, 0, $iv);
 
         return Inertia::render('secret/show', [
+            'title' => $request->title,
             'secret' => $decrypted_secret
         ]);
     }
@@ -81,12 +81,5 @@ class SecretController extends Controller
     public function destroy()
     {
         return 'Destroy';
-    }
-
-    protected function decryptSecret($secret, $randomKey)
-    {
-        $key = hash('sha256', $randomKey, true); // 32 bytes for AES-256
-        $iv = hex2bin($randomKey); // 16 raw bytes IV (from 32-char hex string)
-        return openssl_decrypt($secret, $this->cipher, $key, 0, $iv);
     }
 }
