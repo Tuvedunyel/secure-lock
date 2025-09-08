@@ -1,4 +1,3 @@
-import { PlaceholderPattern } from '@/components/ui/placeholder-pattern';
 import AppLayout from '@/layouts/app-layout';
 import { BreadcrumbItem } from '@/types';
 import { Head } from '@inertiajs/react';
@@ -6,9 +5,8 @@ import { Head } from '@inertiajs/react';
 type TSecret = {
     id: number;
     user_id: number;
-    name: string;
+    title: string;
     secret: string;
-    random_key: string;
     status: string;
 };
 
@@ -20,6 +18,7 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 
 export default function Index({ secrets }: { secrets: TSecret[] }) {
+    console.log(secrets);
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Dashboard" />
@@ -27,6 +26,9 @@ export default function Index({ secrets }: { secrets: TSecret[] }) {
                 <div className="grid auto-rows-min gap-4 md:grid-cols-3">
                     <div className="relative flex aspect-video items-center justify-center overflow-hidden rounded-xl border border-sidebar-border/70 dark:border-sidebar-border">
                         <h1>Secrets</h1>
+                    </div>
+                    <div className="relative flex aspect-video items-center justify-center overflow-hidden rounded-xl border border-sidebar-border/70 dark:border-sidebar-border">
+                        <a href={route('secret.create')}>Add a secret to share</a>
                     </div>
                 </div>
                 <div className="relative flex min-h-[100vh] flex-1 items-center justify-center overflow-hidden rounded-xl border border-sidebar-border/70 md:min-h-min dark:border-sidebar-border">
@@ -37,12 +39,13 @@ export default function Index({ secrets }: { secrets: TSecret[] }) {
                                     key={secret.id}
                                     className="flex flex-col items-start justify-between rounded-lg border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-gray-800"
                                 >
-                                    <h2 className="text-lg font-semibold">{secret.name}</h2>
+                                    <h2 className="text-lg font-semibold">{secret.title}</h2>
+                                    <strong className="my-2 text-sm text-gray-600 dark:text-gray-400">{secret.status}</strong>
                                     <p className="text-sm text-gray-600 dark:text-gray-400">{secret.secret}</p>
                                 </div>
                             ))
                         ) : (
-                            <PlaceholderPattern className="h-full w-full" />
+                            <strong>There's currently no secrets</strong>
                         )}
                     </div>
                 </div>
