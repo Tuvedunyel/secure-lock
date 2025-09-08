@@ -22,6 +22,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
 Route::controller(SecretController::class)->group(function () {
     Route::get('secrets/{secret}', 'show')->name('secret.show');
+    Route::delete('secrets/{secret}', 'destroy')->name('secret.destroy');
 });
 
 require __DIR__ . '/settings.php';

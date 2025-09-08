@@ -6,6 +6,7 @@ type TSecret = {
     id: number;
     user_id: number;
     title: string;
+    recipient: string;
     secret: string;
     status: string;
 };
@@ -18,7 +19,6 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 
 export default function Index({ secrets }: { secrets: TSecret[] }) {
-    console.log(secrets);
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Dashboard" />
@@ -40,7 +40,10 @@ export default function Index({ secrets }: { secrets: TSecret[] }) {
                                     className="flex flex-col items-start justify-between rounded-lg border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-gray-800"
                                 >
                                     <h2 className="text-lg font-semibold">{secret.title}</h2>
-                                    <strong className="my-2 text-sm text-gray-600 dark:text-gray-400">{secret.status}</strong>
+                                    <a className="mt-2 text-xs font-bold" href={`mailto:${secret.recipient}`}>
+                                        {secret.recipient}
+                                    </a>
+                                    <small className="my-2 text-sm font-semibold text-gray-600 dark:text-gray-400">{secret.status}</small>
                                     <p className="text-sm text-gray-600 dark:text-gray-400">{secret.secret}</p>
                                 </div>
                             ))

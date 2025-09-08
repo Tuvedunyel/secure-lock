@@ -7,6 +7,7 @@ use App\Models\Secret;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Inertia\Inertia;
+use Random\RandomException;
 
 class SecretController extends Controller
 {
@@ -16,12 +17,15 @@ class SecretController extends Controller
     public function index(Secret $secret)
     {
         $secrets = $secret->all();
-        // Decrypt the secrets for the authenticated user
+
         return Inertia::render('secret/index', [
             'secrets' => $secrets
         ]);
     }
 
+    /**
+     * @throws RandomException
+     */
     public function store(Request $request)
     {
         // Validate the request data
@@ -35,9 +39,8 @@ class SecretController extends Controller
         $expiresAt = $currentDateTime->addDays(7);
         $randomKey = bin2hex(random_bytes(16));
 
-        // Derive a 32-byte key and a 16-byte IV from the random key token
-        $key = hash('sha256', $randomKey, true); // 32 bytes for AES-256
-        $iv = hex2bin($randomKey); // 16 raw bytes IV (from 32-char hex string)
+        $key = hash('sha256', $randomKey, true);
+        $iv = hex2bin($randomKey);
 
         Secret::create([
             'user_id' => auth()->id(),
@@ -72,6 +75,15 @@ class SecretController extends Controller
 
     public function show(Request $request, Secret $secret)
     {
+        if ($secret->status === 'deleted') {
+            return Inertia::render('secret/show', [
+                'title' => $secret->title,
+                'secret' => $secret->secret,
+                'id' => $secret->id,
+                'status' => $secret->status
+            ]);
+        }
+
         if (!$request->has('key')) {
             abort(404);
         }
@@ -83,25 +95,19 @@ class SecretController extends Controller
             abort(403, 'Invalid decryption key.');
         }
 
-        if ($secret->status === 'viewed') {
-            abort(403, 'This secret has already been viewed.');
-        }
-        $secret->status = 'viewed';
-        $secret->save();
-
         return Inertia::render('secret/show', [
-            'title' => $request->title,
-            'secret' => $decrypted_secret
+            'title' => $secret->title,
+            'secret' => $decrypted_secret,
+            'id' => $secret->id,
+            'status' => $secret->status
         ]);
     }
 
-    public function edit()
+    public function destroy(Secret $secret)
     {
-        return 'Edit';
-    }
-
-    public function destroy()
-    {
-        return 'Destroy';
+        $secret->status = 'deleted';
+        $secret->secret = 'This secret has been consumed and it is no longer available.';
+        $secret->save();
+        return;
     }
 }
