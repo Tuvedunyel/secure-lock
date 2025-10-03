@@ -29,7 +29,7 @@ class SecretShare extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Someone shared a secret with you',
+            subject: 'Your secret : ' . $this->data['title'],
         );
     }
 

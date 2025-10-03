@@ -31,7 +31,9 @@ class SecretController extends Controller
         // Validate the request data
         $request->validate([
             'title' => 'required|string|max:255',
+            'name' => 'required|string|max:75',
             'recipient' => 'required|email|max:255',
+            'message' => 'required|string|max:1000',
             'secret' => 'required|string|max:1000',
         ]);
 
@@ -59,6 +61,8 @@ class SecretController extends Controller
 
         $data = [
             'recipient' => $request->recipient,
+            'name' => $request->name,
+            'message' => $request->message,
             'title' => $request->title,
             'link' => route('secret.show', ['secret' => $sending_secret->id, 'key' => $randomKey]),
         ];
