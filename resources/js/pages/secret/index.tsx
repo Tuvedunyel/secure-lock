@@ -1,6 +1,9 @@
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import AppLayout from '@/layouts/app-layout';
 import { BreadcrumbItem } from '@/types';
 import { Head } from '@inertiajs/react';
+import { Plus } from 'lucide-react';
 
 type TSecret = {
     id: number;
@@ -19,32 +22,49 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 
 export default function Index({ secrets }: { secrets: TSecret[] }) {
+    const setStatusColor = (status: string): 'destructive' | 'default' | 'outline' | 'secondary' | null | undefined => {
+        switch (status) {
+            case 'sent':
+                return 'outline';
+            case 'deleted':
+                return 'destructive';
+            default:
+                return 'default';
+        }
+    };
+
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Dashboard" />
             <div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
-                <div className="grid auto-rows-min gap-4 md:grid-cols-3">
-                    <div className="relative flex aspect-video items-center justify-center overflow-hidden rounded-xl border border-sidebar-border/70 dark:border-sidebar-border">
-                        <h1>Secrets</h1>
-                    </div>
-                    <div className="relative flex aspect-video items-center justify-center overflow-hidden rounded-xl border border-sidebar-border/70 dark:border-sidebar-border">
-                        <a href={route('secret.create')}>Add a secret to share</a>
-                    </div>
+                <div className="align-center flex justify-between px-2 py-4">
+                    <h1 className="text-4xl font-bold uppercase">Secrets</h1>
+                    <Button className="cursor-pointer" asChild>
+                        <a href={route('secret.create')}>
+                            <Plus />
+                            Send a new
+                        </a>
+                    </Button>
                 </div>
-                <div className="relative flex min-h-[100vh] flex-1 items-center justify-center overflow-hidden rounded-xl border border-sidebar-border/70 md:min-h-min dark:border-sidebar-border">
+                <div className="relative flex min-h-[100vh] flex-1 items-start justify-center overflow-hidden rounded-xl border border-sidebar-border/70 md:min-h-min dark:border-sidebar-border">
                     <div className="grid w-full grid-cols-1 gap-4 p-4 md:grid-cols-2 lg:grid-cols-3">
                         {secrets.length > 0 ? (
                             secrets.map((secret) => (
                                 <div
                                     key={secret.id}
-                                    className="flex flex-col items-start justify-between rounded-lg border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-gray-800"
+                                    className="flex flex-col items-center justify-start gap-4 rounded-lg border border-gray-200 p-4 text-center shadow-sm dark:border-gray-700"
                                 >
-                                    <h2 className="text-lg font-semibold">{secret.title}</h2>
-                                    <a className="mt-2 text-xs font-bold" href={`mailto:${secret.recipient}`}>
+                                    <h2 className="text-2xl font-semibold">{secret.title}</h2>
+                                    <a className="text-md font-bold" href={`mailto:${secret.recipient}`}>
                                         {secret.recipient}
                                     </a>
-                                    <small className="my-2 text-sm font-semibold text-gray-600 dark:text-gray-400">{secret.status}</small>
-                                    <p className="text-sm text-gray-600 dark:text-gray-400">{secret.secret}</p>
+                                    <div className="flex items-center gap-2">
+                                        <small>Status :</small>
+                                        <Badge variant={setStatusColor(secret.status)} className="py-0.5 text-sm font-semibold capitalize">
+                                            {secret.status}
+                                        </Badge>
+                                    </div>
+                                    {secret.status === 'deleted' && <p className="text-sm text-gray-600 dark:text-gray-400">{secret.secret}</p>}
                                 </div>
                             ))
                         ) : (
