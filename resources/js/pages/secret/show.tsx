@@ -31,8 +31,12 @@ export default function Show({ title, secret, id, status }: { title: string; sec
             <HomeLayout>
                 <Header />
                 <main>
-                    <h1 className="mb-4 text-2xl font-bold text-[#1b1b18] dark:text-[#EDEDEC]">{title}</h1>
-                    <p className="mb-2 text-xl text-[#1b1b18] dark:text-[#EDEDEC]">{secret}</p>
+                    <main>
+                        <div className="container m-auto flex h-full min-h-[75vh] flex-col items-center justify-center gap-4">
+                            <h1 className="mb-4 text-2xl font-bold text-[#1b1b18] dark:text-[#EDEDEC]">{title}</h1>
+                            <p className="mb-2 text-xl text-[#1b1b18] dark:text-[#EDEDEC]">{secret}</p>
+                        </div>
+                    </main>
                 </main>
                 <Footer />
             </HomeLayout>

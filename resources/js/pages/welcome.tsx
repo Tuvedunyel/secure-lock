@@ -2,6 +2,7 @@ import Footer from '@/components/footer';
 import Header from '@/components/header';
 import HomeLayout from '@/layouts/home-layout';
 import { Head } from '@inertiajs/react';
+import { TrafficCone } from 'lucide-react';
 
 export default function Welcome() {
     return (
@@ -13,7 +14,12 @@ export default function Welcome() {
             </Head>
             <HomeLayout>
                 <Header />
-                <main></main>
+                <main>
+                    <div className="container m-auto flex h-full min-h-[75vh] items-center justify-center gap-4">
+                        <TrafficCone className="stroke-[#1b1b18] dark:stroke-[#EDEDEC]" />
+                        <h1 className="text-2xl font-semibold text-[#1b1b18] dark:text-[#EDEDEC]">Under construction</h1>
+                    </div>
+                </main>
                 <Footer />
             </HomeLayout>
         </>
