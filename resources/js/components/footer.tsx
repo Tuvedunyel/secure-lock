@@ -27,7 +27,7 @@ export default function Footer() {
                     </ul>
                 </div>
                 <div className="flex justify-center">
-                    <p>© 2025 SecureLock. All rights reserved.</p>
+                    <p>© 2025 Studio Fleuttoya. All rights reserved.</p>
                 </div>
             </div>
         </footer>
