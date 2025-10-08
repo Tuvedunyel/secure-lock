@@ -7,10 +7,10 @@ import { TrafficCone } from 'lucide-react';
 export default function Welcome() {
     return (
         <>
-            <Head title="Secret Lock - Accueil">
+            <Head title="Fleuttoya  - Accueil">
                 <link rel="preconnect" href="https://fonts.bunny.net" />
                 <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600" rel="stylesheet" />
-                <meta name="description" content="Secret Lock, the solution to exchange secret informations with minimum risk " />
+                <meta name="description" content="Fleuttoya , the solution to exchange secret informations with minimum risk " />
             </Head>
             <HomeLayout>
                 <Header />
