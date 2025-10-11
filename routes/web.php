@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\SecretController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -17,6 +18,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('dashboard/secrets', 'index')->name('secret.index');
         Route::post('dashboard/secrets', 'store')->name('secret.store');
         Route::get('dashboard/secrets/share', 'create')->name('secret.create');
+    });
+
+    Route::controller(UserController::class)->group(function () {
+        Route::get('dashboard/users', 'index')->name('user.index');
     });
 });
 
