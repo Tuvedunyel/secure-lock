@@ -16,7 +16,9 @@ export default function Show({ title, secret, id, status }: { title: string; sec
 
     useEffect(() => {
         if (status !== 'deleted') {
-            handleDelete();
+            setTimeout(() => {
+                handleDelete();
+            }, 60000);
         }
     });
 
