@@ -7,6 +7,7 @@ import { useEffect } from 'react';
 export default function Show({ title, secret, id, status }: { title: string; secret: string; id: number; status: string }) {
     const { delete: destroy } = useForm();
     const handleDelete = () => {
+        console.log('deleting');
         destroy(route('secret.destroySecret', id), {
             onSuccess: () => {
                 console.log('Secret deleted');
@@ -15,11 +16,11 @@ export default function Show({ title, secret, id, status }: { title: string; sec
     };
 
     useEffect(() => {
-        if (status !== 'deleted')
-            return () => {
-                handleDelete();
-            };
-    }, []);
+        console.log('useEffect called');
+        if (status !== 'deleted') {
+            handleDelete();
+        }
+    });
 
     return (
         <>
