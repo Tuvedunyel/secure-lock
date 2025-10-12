@@ -7,7 +7,7 @@ import { useEffect } from 'react';
 export default function Show({ title, secret, id, status }: { title: string; secret: string; id: number; status: string }) {
     const { delete: destroy } = useForm();
     const handleDelete = () => {
-        destroy(route('secret.destroy', id), {
+        destroy(route('secret.destroySecret', id), {
             onSuccess: () => {
                 console.log('Secret deleted');
             },
@@ -23,10 +23,10 @@ export default function Show({ title, secret, id, status }: { title: string; sec
 
     return (
         <>
-            <Head title="Studio Fleuttoya - Accueil">
+            <Head title="Studio Fleutoya - Accueil">
                 <link rel="preconnect" href="https://fonts.bunny.net" />
                 <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600" rel="stylesheet" />
-                <meta name="description" content="Studio Fleuttoya, site personnel" />
+                <meta name="description" content="Studio Fleutoya, site personnel" />
             </Head>
             <HomeLayout>
                 <Header />

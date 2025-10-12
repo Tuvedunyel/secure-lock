@@ -15,4 +15,11 @@ class UserController extends Controller
             'users' => $users
         ]);
     }
+
+    public function destroy(User $user)
+    {
+        $user->delete();
+
+        return redirect()->route('user.index')->with('success', 'User deleted successfully.');
+    }
 }

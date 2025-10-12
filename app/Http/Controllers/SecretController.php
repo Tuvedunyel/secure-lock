@@ -107,11 +107,17 @@ class SecretController extends Controller
         ]);
     }
 
-    public function destroy(Secret $secret)
+    public function destroySecret(Secret $secret)
     {
         $secret->status = 'deleted';
         $secret->secret = 'This secret has been consumed and it is no longer available.';
         $secret->save();
         return;
+    }
+
+    public function destroy(Secret $secret)
+    {
+        $secret->delete();
+        return redirect('/dashboard/secrets')->with('success', 'Secret deleted successfully!');
     }
 }

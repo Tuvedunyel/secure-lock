@@ -1,7 +1,8 @@
 import { Badge } from '@/components/ui/badge';
 import AppLayout from '@/layouts/app-layout';
 import { BreadcrumbItem } from '@/types';
-import { Head } from '@inertiajs/react';
+import { Head, Link } from '@inertiajs/react';
+import { Trash2 } from 'lucide-react';
 
 type TUser = {
     id: number;
@@ -32,7 +33,7 @@ export default function Index({ users }: { users: TUser[] }) {
                             users.map((user) => (
                                 <div
                                     key={user.id}
-                                    className="flex flex-col items-center justify-start gap-4 rounded-lg border border-gray-200 p-4 text-center shadow-sm dark:border-gray-700"
+                                    className="relative flex flex-col items-center justify-start gap-4 rounded-lg border border-gray-200 p-4 text-center shadow-sm dark:border-gray-700"
                                 >
                                     <h2 className="text-2xl font-semibold">{user.name}</h2>
                                     <p className="text-gray-600 dark:text-gray-400">{user.email}</p>
@@ -44,6 +45,14 @@ export default function Index({ users }: { users: TUser[] }) {
                                             </Badge>
                                         )}
                                     </div>
+                                    <Link
+                                        className="absolute top-5 right-5 h-[35px] w-[35px] cursor-pointer rounded-full bg-[#82181a] p-2"
+                                        href={route('user.destroy', user.id)}
+                                        method="delete"
+                                    >
+                                        <span className="sr-only">{`Delete ${user.name}`}</span>
+                                        <Trash2 className="h-[20px] w-[20px] cursor-pointer" />
+                                    </Link>
                                 </div>
                             ))
                         ) : (

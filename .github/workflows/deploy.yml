@@ -2,7 +2,7 @@ name: Deploy to VPS
 
 on:
   push:
-    branches: [ "main" ]   # change si besoin
+    branches: [ "main" ]
 
 jobs:
   deploy:
@@ -12,11 +12,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # Cache composer
+      # PHP / Composer
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '8.4'    # ou 8.3 selon ton serveur
+          php-version: '8.4'
           extensions: mbstring, xml, ctype, curl, dom, intl, zip, bcmath, mysql
           coverage: none
 
@@ -30,7 +30,7 @@ jobs:
       - name: Install Composer deps (no-dev, optimized)
         run: composer install --no-interaction --no-dev --prefer-dist --optimize-autoloader
 
-      # Build front (Inertia/Vite)
+      # Node / Vite
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
@@ -50,7 +50,7 @@ jobs:
           npm ci
           npm run build
 
-      # Prépare le package à envoyer (sans .git, tests, etc.)
+      # Préparer l’artefact (on n’inclut pas .env ni storage)
       - name: Create deploy artifact directory
         run: |
           mkdir -p deploy
@@ -58,15 +58,16 @@ jobs:
             --exclude=".git" \
             --exclude=".github" \
             --exclude="tests" \
-            --exclude="storage" \
             --exclude="node_modules" \
+            --exclude="storage" \
+            --exclude=".env" \
             ./ ./deploy/
 
-      # Déploiement via rsync (copie incrémentale)
+      # Déploiement rsync -> VPS (on protège .env et storage/)
       - name: Rsync to VPS
         uses: burnett01/rsync-deployments@7.0.1
         with:
-          switches: -avzr --delete
+          switches: -avzr --delete --exclude='.env' --exclude='storage/'
           path: deploy/
           remote_path: ${{ secrets.DEPLOY_PATH }}/
           remote_host: ${{ secrets.SSH_HOST }}
@@ -74,7 +75,7 @@ jobs:
           remote_port: ${{ secrets.SSH_PORT }}
           remote_key: ${{ secrets.SSH_KEY }}
 
-      # Commandes post-déploiement côté serveur
+      # Post-deploy: migrations, caches, permissions, dossiers manquants
       - name: Post-deploy tasks (migrate, cache, permissions)
         uses: appleboy/ssh-action@v1.2.0
         with:
@@ -83,28 +84,32 @@ jobs:
           port: ${{ secrets.SSH_PORT }}
           key: ${{ secrets.SSH_KEY }}
           script: |
+            set -e
             cd ${{ secrets.DEPLOY_PATH }}
 
-            # NE PAS écraser le .env : il reste côté serveur
-            # Ajuste les permissions si besoin
-            sudo chown -R www-data:www-data storage bootstrap/cache
-            find storage -type d -exec chmod 775 {} \;
-            find bootstrap/cache -type d -exec chmod 775 {} \;
+            # Ne pas écraser .env ; si absent on le crée depuis l'exemple
+            if [ ! -f .env ]; then
+              cp .env.example .env
+              php artisan key:generate --force
+            fi
 
-            # Dépendances PHP côté serveur si tu préfères installer là-bas
-            # (Si tes extensions/plateforme diffèrent de l'environnement CI)
-            # composer install --no-interaction --no-dev --prefer-dist --optimize-autoloader
+            # (Re)création des dossiers nécessaires
+            mkdir -p storage/framework/{cache,sessions,views,testing}
+            mkdir -p bootstrap/cache
 
-            # Migrations + caches
+            # Permissions (adapte l'utilisateur/groupe si besoin : www-data/nginx/apache)
+            chown -R www-data:www-data storage bootstrap/cache
+            chmod -R ug+rwX storage bootstrap/cache
+
+            # Lien storage -> public
+            php artisan storage:link || true
+
+            # Migrations et caches Laravel
             php artisan migrate --force
+            php artisan config:clear
+            php artisan route:clear
+            php artisan view:clear
+
             php artisan config:cache
             php artisan route:cache
             php artisan view:cache
-
-            # Assure-toi que le lien storage existe (au cas où)
-            if [ ! -L public/storage ]; then
-              php artisan storage:link || true
-            fi
-
-            # (Re)load Apache
-            sudo systemctl reload apache2

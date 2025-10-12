@@ -18,16 +18,18 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('dashboard/secrets', 'index')->name('secret.index');
         Route::post('dashboard/secrets', 'store')->name('secret.store');
         Route::get('dashboard/secrets/share', 'create')->name('secret.create');
+        Route::delete('dashboard/secrets/{secret}', 'destroy')->name('secret.destroy');
     });
 
     Route::controller(UserController::class)->group(function () {
         Route::get('dashboard/users', 'index')->name('user.index');
+        Route::delete('dashboard/users/{user}', 'destroy')->name('user.destroy');
     });
 });
 
 Route::controller(SecretController::class)->group(function () {
     Route::get('secrets/{secret}', 'show')->name('secret.show');
-    Route::delete('secrets/{secret}', 'destroy')->name('secret.destroy');
+    Route::delete('secrets/{secret}', 'destroy')->name('secret.destroySecret');
 });
 
 require __DIR__ . '/settings.php';

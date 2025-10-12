@@ -2,8 +2,8 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import AppLayout from '@/layouts/app-layout';
 import { BreadcrumbItem } from '@/types';
-import { Head } from '@inertiajs/react';
-import { Plus } from 'lucide-react';
+import { Head, Link } from '@inertiajs/react';
+import { Plus, Trash2 } from 'lucide-react';
 
 type TSecret = {
     id: number;
@@ -52,7 +52,7 @@ export default function Index({ secrets }: { secrets: TSecret[] }) {
                             secrets.map((secret) => (
                                 <div
                                     key={secret.id}
-                                    className="flex flex-col items-center justify-start gap-4 rounded-lg border border-gray-200 p-4 text-center shadow-sm dark:border-gray-700"
+                                    className="relative flex flex-col items-center justify-start gap-4 rounded-lg border border-gray-200 p-4 text-center shadow-sm dark:border-gray-700"
                                 >
                                     <h2 className="text-2xl font-semibold">{secret.title}</h2>
                                     <a className="text-md font-bold" href={`mailto:${secret.recipient}`}>
@@ -65,6 +65,14 @@ export default function Index({ secrets }: { secrets: TSecret[] }) {
                                         </Badge>
                                     </div>
                                     {secret.status === 'deleted' && <p className="text-sm text-gray-600 dark:text-gray-400">{secret.secret}</p>}
+                                    <Link
+                                        className="absolute top-5 right-5 h-[35px] w-[35px] cursor-pointer rounded-full bg-[#82181a] p-2"
+                                        href={route('secret.destroy', secret.id)}
+                                        method="delete"
+                                    >
+                                        <span className="sr-only">{`Delete ${secret.title}`}</span>
+                                        <Trash2 className="h-[20px] w-[20px] cursor-pointer" />
+                                    </Link>
                                 </div>
                             ))
                         ) : (

@@ -7,10 +7,13 @@ import { TrafficCone } from 'lucide-react';
 export default function Welcome() {
     return (
         <>
-            <Head title="Fleuttoya  - Accueil">
+            <Head title="Studio Fleutoya  - Accueil">
                 <link rel="preconnect" href="https://fonts.bunny.net" />
                 <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600" rel="stylesheet" />
-                <meta name="description" content="Fleuttoya , the solution to exchange secret informations with minimum risk " />
+                <meta
+                    name="description"
+                    content="Studio Fleutoya, personal website of Montoya Grégoire. I am a Fullstack web developer mainly with Laravel and React"
+                />
             </Head>
             <HomeLayout>
                 <Header />
