@@ -2,10 +2,10 @@ import Footer from '@/components/footer';
 import Header from '@/components/header';
 import HomeLayout from '@/layouts/home-layout';
 import { Head, useForm } from '@inertiajs/react';
-import { useEffect } from 'react';
 
 export default function Show({ title, secret, id, status }: { title: string; secret: string; id: number; status: string }) {
     const { delete: destroy } = useForm();
+    const initialMessage = secret;
     const handleDelete = () => {
         destroy(route('secret.destroySecret', id), {
             onSuccess: () => {
@@ -14,13 +14,11 @@ export default function Show({ title, secret, id, status }: { title: string; sec
         });
     };
 
-    useEffect(() => {
-        if (status !== 'deleted') {
-            setTimeout(() => {
-                handleDelete();
-            }, 60000);
-        }
-    });
+    if (status !== 'deleted') {
+        setTimeout(() => {
+            handleDelete();
+        }, 60000);
+    }
 
     return (
         <>
@@ -34,8 +32,8 @@ export default function Show({ title, secret, id, status }: { title: string; sec
                 <main>
                     <main>
                         <div className="container m-auto flex h-full min-h-[75vh] flex-col items-center justify-center gap-4">
-                            <h1 className="mb-4 text-2xl font-bold text-[#1b1b18] dark:text-[#EDEDEC]">{title}</h1>
-                            <p className="mb-2 text-xl text-[#1b1b18] dark:text-[#EDEDEC]">{secret}</p>
+                            <h1 className="mb-4 text-2xl font-bold text-foreground">{title}</h1>
+                            <p className="mb-2 text-xl text-foreground">{initialMessage}</p>
                         </div>
                     </main>
                 </main>
