@@ -19,8 +19,8 @@ export default function Welcome() {
                 <Header />
                 <main>
                     <div className="container m-auto flex h-full min-h-[75vh] items-center justify-center gap-4">
-                        <TrafficCone className="stroke-[#1b1b18] dark:stroke-[#EDEDEC]" />
-                        <h1 className="text-2xl font-semibold text-[#1b1b18] dark:text-[#EDEDEC]">Under construction</h1>
+                        <TrafficCone className="stroke-foreground" />
+                        <h1 className="text-2xl font-semibold text-foreground">Under construction</h1>
                     </div>
                 </main>
                 <Footer />

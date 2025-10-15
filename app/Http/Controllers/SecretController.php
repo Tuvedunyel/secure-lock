@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\SecretResource;
 use App\Mail\SecretShare;
 use App\Models\Secret;
 use Illuminate\Http\Request;
@@ -14,12 +15,10 @@ class SecretController extends Controller
 
     protected string $cipher = 'AES-256-CBC';
 
-    public function index(Secret $secret)
+    public function index()
     {
-        $secrets = $secret->all();
-
         return Inertia::render('secret/index', [
-            'secrets' => $secrets
+            'collection' => SecretResource::collection(Secret::paginate(10))
         ]);
     }
 
@@ -30,8 +29,8 @@ class SecretController extends Controller
     {
         // Validate the request data
         $request->validate([
-            'title' => 'required|string|max:255',
             'name' => 'required|string|max:75',
+            'title' => 'required|string|max:255',
             'recipient' => 'required|email|max:255',
             'message' => 'required|string|max:1000',
             'secret' => 'required|string|max:1000',
@@ -46,8 +45,10 @@ class SecretController extends Controller
 
         Secret::create([
             'user_id' => auth()->id(),
+            'name' => $request->name,
             'title' => $request->title,
             'recipient' => $request->recipient,
+            'message' => $request->message,
             'secret' => openssl_encrypt($request->secret, $this->cipher, $key, 0, $iv),
             'status' => 'sent',
             'expires_at' => $expiresAt,
@@ -74,7 +75,11 @@ class SecretController extends Controller
 
     public function create()
     {
-        return Inertia::render('secret/create-secret');
+        $secret = new Secret();
+
+        return Inertia::render('secret/create-secret', [
+            'secret' => $secret
+        ]);
     }
 
     public function show(Request $request, Secret $secret)
